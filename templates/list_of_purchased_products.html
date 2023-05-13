@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>List of purchase product</h2>
+
+    {% endblock %}
+
+
+ {% block content %}
+     <div>
+       {% if messages %}
+       {% for message in messages %}
+           <h2 style="color: red"> {{ message }} </h2>
+       {% endfor %}
+       {% endif %}
+     </div>
+
+
+     <div>
+         {% if user.is_authenticated and user.is_superuser == False %}
+         {% for purchase in purchase_list %}
+         Order #{{purchase.id}}, product: {{ purchase.product }},
+         quantity: {{ purchase.quantity }}, sum: {{ purchase.total_sum }} UAH,
+         time of purchase: {{ purchase.time_of_purchase }} <br><br>
+         <form  method='post' action="{% url 'return_product' purchase.id  %}">
+         {% csrf_token %}
+         {{ returns_form.as_p }}
+         <input type="submit" value="Return purchase"></form>
+         <br>
+     {% endfor %}
+    {% endif %}
+
+    {% if user.is_superuser %}
+         {% for purchase in purchase_list %}Order #{{purchase.id}}, product: {{ purchase.product }},
+         quantity: {{ purchase.quantity }}, sum: {{ purchase.total_sum }} UAH,
+         time of purchase: {{ purchase.time_of_purchase }} <br><br>
+     {% endfor %}
+    {% endif %}
+     </div>
+
+     <div class="pagination">
+          <span class="step-links">
+          {% if page_obj.has_previous %}
+          <a href="?page=1">&laquo; first page</a>
+          <a href="?page={{ page_obj.previous_page_number }}">previous page</a>
+          {% endif %}
+          <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next page</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">last page&raquo;</a>
+          {% endif %}
+          </span>
+     </div>
+
+    {% endblock %}

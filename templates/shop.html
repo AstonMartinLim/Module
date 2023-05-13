@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+
+    {% block header %}
+    <h3>Site navigations</h3>
+    {% endblock %}
+
+
+
+{% block topic %}
+{% endblock %}
+
+
+{% block content %}
+    <div>
+    <h1> List of products </h1>
+    {% if messages %}
+       {% for message in messages %}
+           <h2 style="color: red"> {{ message }} </h2>
+       {% endfor %}
+    {% endif %}
+    </div>
+
+    <div>
+    {% if user.is_anonymous %}
+         {% for product in product_list %}
+         <h3>Product: {{ product.name_of_product }}, Descriptions: {{ product.description }},
+         Price: {{ product.price }} UAH per unit, Quantity: {{ product.quantity }} units in stock</h3>
+         {% endfor %}
+    {% endif %}
+
+    {% if user.is_authenticated and user.is_superuser == False %}
+         {% for product in product_list %}
+         <h3>Product: {{ product.name_of_product }}, Descriptions: {{ product.description }},
+         Price: {{ product.price }} UAH per unit, Quantity: {{ product.quantity }} units in stock
+         <form method='post' action="{% url 'cart' product.id %}">
+         {% csrf_token %}
+         {{ purchase_form.as_p }}
+         <input type="submit" value="Buy it">
+         </form></h3>
+         {% endfor %}
+    {% endif %}
+
+    {% if user.is_superuser %}
+         {% for product in product_list %}
+         <h3>Product: {{ product.name_of_product }}, Descriptions: {{ product.description }},
+         Price: {{ product.price }} UAH per unit, Quantity: {{ product.quantity }} units in stock
+         <form method='post' action="{% url 'cart' product.id %}">
+         {% csrf_token %}
+         {{ purchase_form.as_p }}
+         <input type="button" value="Change it" onclick="window.location.href='{% url 'change_product' product.id %}'">
+         </form></h3>
+         {% endfor %}
+    {% endif %}
+
+
+    </div>
+
+    <div class="pagination">
+          <span class="step-links">
+          {% if page_obj.has_previous %}
+          <a href="?page=1">&laquo; first page</a>
+          <a href="?page={{ page_obj.previous_page_number }}">previous page</a>
+          {% endif %}
+          <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next page</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">last page&raquo;</a>
+          {% endif %}
+          </span>
+     </div>
+{% endblock %}
+
