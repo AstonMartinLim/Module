@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop</title>
+</head>
+<body style="background-color:blanchedalmond">
+    <div>
+        <h1 style="color:blue">Online shop</h1>
+    </div>
+
+    <div>
+    {% block header %}
+    {% endblock %}
+    </div>
+
+    <div>
+    {% block urls %}
+        <div>
+        {% if user.is_superuser %}
+        Admin menu:<br>
+            <a href="{% url 'shop' %}">Shop</a><br>
+            <a href="{% url 'list_of_purchased_products' %}">List of purchased products</a><br>
+            <a href="{% url 'add_product' %}">Add new product</a><br>
+            <a href="{% url 'list_of_purchased_products' %}">List of purchased products</a><br>
+            <a href="{% url 'return_list' %}">List of return purchases</a><br>
+        {% endif %}
+        <br>
+        {% if user.is_authenticated and user.is_superuser == False %}
+        User menu:<br>
+            <a href="{% url 'shop' %}">Shop</a><br>
+            <a href="{% url 'list_of_purchased_products' %}">List of purchased products</a><br>
+            <a href="{% url 'login' %}">Login</a><br>
+            <a href="{% url 'registration' %}">Registration of new user</a><br>
+        {% endif %}
+
+        {% if user.is_anonymous %}
+            <a href="{% url 'login' %}">Login</a><br>
+            <a href="{% url 'registration' %}">Registration of new user</a><br><br>
+        {% endif %}
+
+    </div>
+    {% endblock %}
+    </div>
+
+    <div>
+        {% block login %}
+          {% if user.is_authenticated and user.is_superuser == False %}
+              <h4>Hello {{ user.username }}</h4>
+              Account statys: {{ user.wallet }} UAH <br><br>
+              <form action="{% url 'logout' %}">
+                  <button type="submit">Logout</button>
+              </form>
+          {% endif %}
+
+           {% if user.is_superuser %}
+              <h4>Hello {{ user.username }}</h4>
+              <form action="{% url 'logout' %}">
+                  <button type="submit">Logout</button>
+              </form>
+          {% endif %}
+
+             {% if user.is_anonymous %}
+              You are not logged in
+             {% endif %}
+          <br>
+        {% endblock %}
+    </div>
+
+    <div>
+    {% block content %}
+    {% endblock %}
+    </div>
+
+</body>
+</html>
