@@ -5,6 +5,7 @@ from django.utils import timezone
 from datetime import timedelta
 from main_app.exceptions import ValidationError
 from main_app.models import CustomUser, Product, Purchase, Returns
+from online_shop.settings import ALLOWED_TIME_TO_RETURN
 
 
 class UserCreateForm(UserCreationForm):
@@ -79,7 +80,7 @@ class ReturnsCreateForm(ModelForm):
         try:
             purchase = Purchase.objects.get(pk=self.purchase_id)
             self.purchase = purchase
-            if purchase.time_of_purchase + timedelta(seconds=60 * 3) < timezone.now():
+            if purchase.time_of_purchase + timedelta(seconds=ALLOWED_TIME_TO_RETURN) < timezone.now():
                 self.add_error(None, 'Error')
                 messages.error(self.request, 'Time to return purchase has passed!')
             if Returns.objects.filter(purchase_id=purchase.id).exists():
