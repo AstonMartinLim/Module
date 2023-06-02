@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+    {% block header %}
+    <h2>List of return purchase</h2>
+    {% endblock %}
+
+
+ {% block content %}
+     <div>
+       {% if messages %}
+       {% for message in messages %}
+           <h2 style="color: red"> {{ message }} </h2>
+       {% endfor %}
+       {% endif %}
+     </div>
+
+
+     <div>
+     {% for return in returns_list %}
+     Order #{{return.id}}, return object: {{ return.purchase }},
+         application date: {{ return.time_of_return }} <br><br>
+
+         <form method="post" action="{% url 'admin_approve' return.id  %}">
+                {% csrf_token %}
+
+                <input type="submit" value="Approve" name="approve">
+                <input type="submit" value="Refuse" name="refuse">
+         </form>
+
+         <br>
+     {% endfor %}
+     </div>
+     <div class="pagination">
+          <span class="step-links">
+          {% if page_obj.has_previous %}
+          <a href="?page=1">&laquo; first page</a>
+          <a href="?page={{ page_obj.previous_page_number }}">previous page</a>
+          {% endif %}
+          <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next page</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">last page&raquo;</a>
+          {% endif %}
+          </span>
+     </div>
+
+    {% endblock %}

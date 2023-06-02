@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>Add new product</h2>
+
+    {% endblock %}
+
+
+{% block urls %}
+    <div>
+        <a href="{% url 'shop' %}">Shop</a>
+    <br>
+        <a href="{% url 'add_product' %}">Add new product</a>
+
+    </div>
+{% endblock %}
+
+ {% block content %}
+     <div>
+     <h1> Buy a product </h1><br>
+
+
+     </div>
+    {% endblock %}
