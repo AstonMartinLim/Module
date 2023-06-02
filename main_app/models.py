@@ -26,8 +26,8 @@ class Product(models.Model):
 
 
 class Purchase(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='buyer')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="order")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     time_of_purchase = models.DateTimeField(auto_now_add=True)
     total_sum = models.FloatField(default=0)
@@ -37,7 +37,7 @@ class Purchase(models.Model):
 
 
 class Returns(models.Model):
-    purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE, related_name='purchase')
+    purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
     time_of_return = models.DateTimeField(auto_now_add=True)
 
     class Meta:
